@@ -6,6 +6,7 @@ import (
 	"rachmadep/golang-restful-api/controller"
 	"rachmadep/golang-restful-api/exception"
 	"rachmadep/golang-restful-api/helper"
+	"rachmadep/golang-restful-api/middleware"
 	"rachmadep/golang-restful-api/repository"
 	"rachmadep/golang-restful-api/service"
 
@@ -31,10 +32,10 @@ func main() {
 	router.DELETE("/api/categories/:categoryId", categoryController.Delete)
 
 	router.PanicHandler = exception.ErrorHandler
-	
+
 	server := http.Server{
 		Addr:    "localhost:3000",
-		Handler: router,
+		Handler: middleware.NewAuthMiddleware(router),
 	}
 
 	err := server.ListenAndServe()
