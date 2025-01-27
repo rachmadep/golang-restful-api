@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"rachmadep/golang-restful-api/exception"
 	"rachmadep/golang-restful-api/helper"
 	"rachmadep/golang-restful-api/model/domain"
 	"rachmadep/golang-restful-api/model/web"
@@ -44,7 +45,9 @@ func (service CategoryServiceImpl) Update(ctx context.Context, request web.Categ
 	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	category.Name = request.Name
 
@@ -59,7 +62,9 @@ func (service CategoryServiceImpl) Delete(ctx context.Context, categoryId int) {
 	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	service.CategoryRepository.Delete(ctx, tx, category)
 }
@@ -70,7 +75,9 @@ func (service CategoryServiceImpl) FindById(ctx context.Context, categoryId int)
 	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	return helper.ToCategoryResponse(category)
 }

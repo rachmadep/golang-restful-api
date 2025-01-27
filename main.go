@@ -1,13 +1,15 @@
 package main
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	"net/http"
 	"rachmadep/golang-restful-api/app"
 	"rachmadep/golang-restful-api/controller"
+	"rachmadep/golang-restful-api/exception"
 	"rachmadep/golang-restful-api/helper"
 	"rachmadep/golang-restful-api/repository"
 	"rachmadep/golang-restful-api/service"
+
+	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/julienschmidt/httprouter"
@@ -28,6 +30,8 @@ func main() {
 	router.PUT("/api/categories/:categoryId", categoryController.Update)
 	router.DELETE("/api/categories/:categoryId", categoryController.Delete)
 
+	router.PanicHandler = exception.ErrorHandler
+	
 	server := http.Server{
 		Addr:    "localhost:3000",
 		Handler: router,
