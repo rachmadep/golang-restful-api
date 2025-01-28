@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"rachmadep/golang-restful-api/app"
 	"rachmadep/golang-restful-api/controller"
-	"rachmadep/golang-restful-api/exception"
 	"rachmadep/golang-restful-api/helper"
 	"rachmadep/golang-restful-api/middleware"
 	"rachmadep/golang-restful-api/repository"
@@ -13,7 +12,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -23,15 +21,7 @@ func main() {
 	categoryService := service.NewCategoryService(categoryRepository, db, validate)
 	categoryController := controller.NewCategoryController(categoryService)
 
-	router := httprouter.New()
-
-	router.GET("/api/categories", categoryController.FindAll)
-	router.GET("/api/categories/:categoryId", categoryController.FindById)
-	router.POST("/api/categories", categoryController.Create)
-	router.PUT("/api/categories/:categoryId", categoryController.Update)
-	router.DELETE("/api/categories/:categoryId", categoryController.Delete)
-
-	router.PanicHandler = exception.ErrorHandler
+	router := app.NewRouter(categoryController)
 
 	server := http.Server{
 		Addr:    "localhost:3000",
