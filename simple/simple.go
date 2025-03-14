@@ -10,8 +10,10 @@ type SimpleService struct {
 	*SimpleRepository
 }
 
-func NewSimpleRepository() *SimpleRepository {
-	return &SimpleRepository{}
+func NewSimpleRepository(isError bool) *SimpleRepository {
+	return &SimpleRepository{
+		Error: isError,
+	}
 }
 
 func NewSimpleService(simpleRepository *SimpleRepository) (*SimpleService, error) {
